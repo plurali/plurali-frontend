@@ -16,3 +16,5 @@ export const $axios = axios.create({
     baseURL: "http://localhost:3000",
     withCredentials: true
 })
+
+export const formatError = (e: any) => e?.response?.data?.error ?? e?.message ?? 'Unknown error has occurred. Please try again.'
