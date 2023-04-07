@@ -1,5 +1,5 @@
 <template>
-    <div :style="{backgroundColor: color}" class="w-6 h-6 rounded-full"></div>
+    <div :style="{backgroundColor: color}" class="w-6 h-6 rounded-full border border-gray-400"></div>
 </template>
 
 <script lang="ts">

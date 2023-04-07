@@ -28,8 +28,7 @@ export interface System {
     fields: MemberField[],
     color: string | null,
     description: string | null,
-    // TODO
-    avatar: null
+    avatar: string | null
 }
 
 export interface Member {
@@ -37,4 +36,5 @@ export interface Member {
     name: string
     pronouns: string | null
     visibility: Visibility
+    avatar: string | null
 }

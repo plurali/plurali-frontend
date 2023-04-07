@@ -14,18 +14,22 @@
             <span v-if="system.fields.length >= 1"
                   class="inline-flex items-center gap-1">Custom Fields ({{ system.fields.length }}):</span>
 
-            <div class="grid grid-cols-3 gap-1">
+            <div class="grid grid-cols-3 gap-2">
                 <div v-for="field of system.fields.sort((a,b) => a.position > b.position)"
-                     class="px-4 py-2 border rounded-2xl text-sm">
+                     class="px-4 py-3    border border-l-4 rounded-2xl text-sm">
                     {{ field.name }}
                 </div>
             </div>
         </div>
 
-        <div v-if="!loadingMembers && members" class="grid grid-cols-2 gap-1 mb-5">
-            <div v-for="member of members" class="px-4 py-2 border rounded-2xl text-sm">
-                <h2 class="text-xl">{{ member.name }}</h2>
-                <h3 class="text-gray-700">{{ member.description }}</h3>
+        <div v-if="!loadingMembers && members" class="grid grid-cols-2 gap-2 mb-5">
+            <div v-for="member of members" class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4" :style="member.color ? {borderLeftColor: member.color} : {}">
+                <img v-if="member.avatar" :src="member.avatar" :alt="member.name" class="w-16 h-16 rounded-full object-cover">
+                <Color v-else :color="member.color ?? '#e2e8f0'" class="flex-shrink-0 w-16 h-16 opacity-25"/>
+                <div>
+                    <h2 class="text-xl">{{ member.name }} <span v-if="member.pronouns" class="text-sm text-gray-500">{{member.pronouns}}</span></h2>
+                    <h3 class="text-gray-700">{{ member.description }}</h3>
+                </div>
             </div>
         </div>
         <div v-else-if="members === false" class="inline-flex w-full justify-center items-center">
