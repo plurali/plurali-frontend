@@ -23,14 +23,14 @@
         </div>
 
         <div v-if="!loadingMembers && members" class="grid grid-cols-2 gap-2 mb-5">
-            <div v-for="member of members" class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4" :style="member.color ? {borderLeftColor: member.color} : {}">
+            <router-link :to="`/admin/member/${member.id}`" v-for="member of members" class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4" :style="member.color ? {borderLeftColor: member.color} : {}">
                 <img v-if="member.avatar" :src="member.avatar" :alt="member.name" class="w-16 h-16 rounded-full object-cover">
                 <Color v-else :color="member.color ?? '#e2e8f0'" class="flex-shrink-0 w-16 h-16 opacity-25"/>
                 <div>
                     <h2 class="text-xl">{{ member.name }} <span v-if="member.pronouns" class="text-sm text-gray-500">{{member.pronouns}}</span></h2>
                     <h3 class="text-gray-700">{{ member.description }}</h3>
                 </div>
-            </div>
+            </router-link>
         </div>
         <div v-else-if="members === false" class="inline-flex w-full justify-center items-center">
             <Button class="border border-gray-700 text-gray-700" @click.prevent="fetchMembers">Show members</Button>
@@ -96,10 +96,13 @@ export default defineComponent({
                 }
 
                 system.value = res.data.system;
+                loadingSystem.value = false;
+                await fetchMembers()
             } catch (e) {
+                loadingSystem.value = false;
+                system.value = false;
                 flash(formatError(e), FlashType.Danger, true)
             }
-            loadingSystem.value = false;
         }
 
         const fetchMembers = async () => {

@@ -32,9 +32,13 @@ export interface System {
 }
 
 export interface Member {
-    id: string
-    name: string
-    pronouns: string | null
-    visibility: Visibility
-    avatar: string | null
+    id: string,
+    name: string,
+    pronouns: string|null,
+    visibility: Visibility,
+    lastModified: Date,
+    color: string|null,
+    description: string|null,
+    fields: MemberFieldWithValue[],
+    avatar: string|null
 }
