@@ -19,6 +19,8 @@ export interface User {
     id: string
     username: string
     pluralKey: string
+    overridePluralId: string|null
+    admin: boolean
 }
 
 export interface System {

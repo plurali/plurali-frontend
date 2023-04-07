@@ -66,6 +66,7 @@ export default defineComponent({
 
                 member.value = res.data.member;
             } catch (e) {
+                member.value = false;
                 flash(formatError(e), FlashType.Danger, true)
             }
             loading.value = false;

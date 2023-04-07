@@ -11,6 +11,12 @@
                 placeholder="Simply Plural API key" />
         </div>
 
+        <div class="mb-3.5" v-if="user.admin">
+            <Label>Override Plural ID</Label>
+            <input :disabled="loading" v-model="form.overridePluralId" @keyup="validate" class="w-full p-2.5 border rounded-xl border-gray-400"
+                   placeholder="Override Plural ID" />
+        </div>
+
         <Button :disabled="loading" type="submit" class="w-full border border-violet-700 text-violet-700 mb-3.5">
             <p v-if="!loading">Update user settings</p>
             <Spinner v-else/>
@@ -44,6 +50,7 @@ export default defineComponent({
     setup() {
         const form = reactive({
             pluralKey: user.value?.pluralKey ?? '',
+            overridePluralId: user.value?.overridePluralId ?? '',
         })
 
         const formErrors = reactive({
@@ -78,7 +85,8 @@ export default defineComponent({
             formErrors,
             loading,
             validate,
-            submit
+            submit,
+            user,
         }
     }
 })
