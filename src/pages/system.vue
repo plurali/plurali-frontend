@@ -17,7 +17,7 @@ import Button from "../components/Button.vue";
 import {bgColor, flash, FlashType} from "../store";
 import Spinner from "../components/Spinner.vue";
 import {System} from "../api/types";
-import {formatError} from "../api";
+import {formatError, wrapRequest} from "../api";
 import Color from "../components/global/color/ColorCircle.vue";
 import {useRoute} from "vue-router";
 import {useGoBack} from "../composables/goBack";
@@ -47,20 +47,11 @@ export default defineComponent({
         const route = useRoute()
 
         const fetchSystem = async () => {
-            if (system.value === null) return;
-            system.value = null;
-            try {
-                const res = (await getSystem(getRouteParam(route.params.systemId))).data
-                if (!res.success) throw new Error(res.error);
+            const res = await wrapRequest(() => getSystem(getRouteParam(route.params.systemId)));
+            system.value = res ? res.system : res;
 
-                if (res.data.system.color) {
-                    bgColor.value = res.data.system.color;
-                }
-
-                system.value = res.data.system;
-            } catch (e) {
-                system.value = false;
-                flash(formatError(e), FlashType.Danger, true)
+            if (res && res.system.color) {
+                bgColor.value = res.system.color;
             }
         }
 

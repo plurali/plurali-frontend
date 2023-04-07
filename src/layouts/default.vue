@@ -1,6 +1,6 @@
 <template>
-    <div id="plurali" class="relative w-screen h-screen bg-cover bg-no-repeat bg-center flex py-32">
-        <svg id="visual" class="absolute w-full h-full inset-0 object-cover -z-10" viewBox="0 0 900 600"
+    <div id="plurali" class="relative min-w-screen min-h-screen bg-cover bg-no-repeat bg-center flex">
+        <svg id="visual" class="absolute w-screen h-screen top-0 object-cover -z-10 transition-all" viewBox="0 0 900 600"
              xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
              version="1.1">
             <path d="M0 25L8.8 26C17.7 27 35.3 29 53 32C70.7 35 88.3 39 106 38C123.7 37 141.3 31 159 28C176.7 25 194.3 25 212 28C229.7 31 247.3 37 265 38C282.7 39 300.3 35 318 32C335.7 29 353.3 27 371 29C388.7 31 406.3 37 423.8 40C441.3 43 458.7 43 476.2 41C493.7 39 511.3 35 529 32C546.7 29 564.3 27 582 26C599.7 25 617.3 25 635 26C652.7 27 670.3 29 688 30C705.7 31 723.3 31 741 33C758.7 35 776.3 39 794 39C811.7 39 829.3 35 847 34C864.7 33 882.3 35 891.2 36L900 37L900 0L891.2 0C882.3 0 864.7 0 847 0C829.3 0 811.7 0 794 0C776.3 0 758.7 0 741 0C723.3 0 705.7 0 688 0C670.3 0 652.7 0 635 0C617.3 0 599.7 0 582 0C564.3 0 546.7 0 529 0C511.3 0 493.7 0 476.2 0C458.7 0 441.3 0 423.8 0C406.3 0 388.7 0 371 0C353.3 0 335.7 0 318 0C300.3 0 282.7 0 265 0C247.3 0 229.7 0 212 0C194.3 0 176.7 0 159 0C141.3 0 123.7 0 106 0C88.3 0 70.7 0 53 0C35.3 0 17.7 0 8.8 0L0 0Z"
@@ -23,18 +23,20 @@
                   :fill="colors[8]"></path>
         </svg>
 
-        <div class="container max-w-6xl mx-auto">
-            <div v-if="flashes.length >= 1" class="inline-flex flex-col gap-0.5 w-full">
-                <Flash v-for="flash of flashes" :class="flash.type">
-                    {{ flash.message }}
-                </Flash>
-            </div>
-            <div class="bg-white rounded-2xl shadow-2xl p-8">
-                <div v-if="goBack" class="mb-5 inline-flex w-full justify-start items-center">
-                    <router-link :to="goBack" class="text-gray-500 hover:text-black transition">← Go back</router-link>
+        <div class="container max-w-7xl mx-auto">
+            <div class="py-32">
+                <div v-if="flashes.length >= 1" class="inline-flex flex-col gap-0.5 w-full">
+                    <Flash v-for="flash of flashes" :class="flash.type">
+                        {{ flash.message }}
+                    </Flash>
                 </div>
+                <div class="bg-white rounded-2xl shadow-2xl p-8">
+                    <div v-if="goBack" class="mb-5 inline-flex w-full justify-start items-center">
+                        <router-link :to="goBack" class="text-gray-500 hover:text-black transition">← Go back</router-link>
+                    </div>
 
-                <router-view/>
+                    <router-view/>
+                </div>
             </div>
         </div>
     </div>
@@ -48,8 +50,9 @@ import {generateShades} from "../utils/colors";
 
 export default defineComponent({
     setup() {
+        // [...generateShades(bgColor.value).slice(1), "#fff" ] perhaps?
         const colors = computed(() => bgColor.value ? generateShades(bgColor.value) : [
-            "#3b0764", "#4b1876", "#5b2788", "#6b369a", "#7c45ad", "#8d54c0", "#9e64d4", "#af74e8", "#c084fc"
+            "#3b0764", "#4b1876", "#5b2788", "#6b369a", "#7c45ad", "#8d54c0", "#9e64d4", "#af74e8",     "#c084fc"
         ])
         return {
             flashes,

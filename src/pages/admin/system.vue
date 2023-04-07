@@ -14,7 +14,7 @@ import Title from "../../components/Title.vue";
 import Subtitle from "../../components/Subtitle.vue";
 import {bgColor, flash, FlashType} from "../../store";
 import {System} from "../../api/types";
-import {formatError} from "../../api";
+import {formatError, wrapRequest} from "../../api";
 import {getSystem} from "../../api/system";
 import ColorCircle from "../../components/global/color/ColorCircle.vue";
 import CustomFields from "../../components/global/fields/CustomFields.vue";
@@ -41,22 +41,12 @@ export default defineComponent({
         useGoBack('/admin')
 
         const fetchSystem = async () => {
-            system.value = null;
-            try {
-                const res = (await getSystem()).data;
-                if (!res.success) throw new Error(res.error);
-
-                if (res.data.system.color) {
-                    bgColor.value = res.data.system.color;
-                }
-
-                system.value = res.data.system;
-            } catch (e) {
-                system.value = false;
-                flash(formatError(e), FlashType.Danger, true)
+            const res = await wrapRequest(getSystem);
+            system.value = res ? res.system : res;
+            if (res && res.system.color) {
+                bgColor.value = res.system.color;
             }
         }
-
 
         onMounted(() => fetchSystem())
 

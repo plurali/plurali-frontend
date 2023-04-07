@@ -1,11 +1,17 @@
 <template>
     <div
-        @click.prevent="toggleVisibility"
+        @click.ctrl.prevent="toggleVisibility"
         class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer"
         :class="[isAdmin ? customField.data.visible ? 'border-l-green-500' : 'border-l-red-500' : '', loading && 'bg-gray-200']"
     >
         <p class="font-medium">{{ customField.name }}</p>
-        <p v-if="customField.value" class="text-gray-500">{{ customField.value }}</p>
+        <p v-if="value?.length >= 1" class="text-gray-500">
+            <span v-if="customField.type === 'Color'" class="inline-flex justify-center items-center gap-2">
+                <ColorCircle :color="value!"/>
+                <span class="text-sm">{{ value }}</span>
+            </span>
+            <span v-else v-html="value"></span>
+        </p>
     </div>
 </template>
 <script lang="ts">
@@ -17,8 +23,11 @@ import {formatError} from "../../../api";
 import {updateField} from "../../../api/system";
 import customFields from "./CustomFields.vue";
 import {useRoute} from "vue-router";
+import {formatField} from "../../../api/fields";
+import ColorCircle from "../color/ColorCircle.vue";
 
 export default defineComponent({
+    components: {ColorCircle},
     model: {
         prop: 'field',
         event: 'change',
@@ -31,7 +40,7 @@ export default defineComponent({
         modifiable: {
             type: Boolean,
             default: () => false,
-        }
+        },
     },
     setup: function ({field: _field, modifiable}) {
         const customField = ref<MemberField|MemberFieldWithValue>(_field);
@@ -63,6 +72,8 @@ export default defineComponent({
             toggleVisibility,
             customField,
             loading,
+            formatField,
+            value: computed(() => (customField.value as any).value ? formatField(customField.value as any as MemberFieldWithValue)  : ''),
             isAdmin: computed(() => route.path.startsWith('/admin'))
         }
     }

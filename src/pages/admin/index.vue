@@ -23,6 +23,7 @@ import {logout as apiLogout} from "../../api/auth";
 import {flash, FlashType} from "../../store";
 import { useRouter } from 'vue-router';
 import {useGoBack} from "../../composables/goBack";
+import {wrapRequest} from "../../api";
 
 export default defineComponent({
     components: {
@@ -37,15 +38,8 @@ export default defineComponent({
         useGoBack(null);
 
         const logout = async () => {
-            try {
-                await apiLogout();
-            } catch (e) {
-                flash(
-                    (e as any)?.response?.data?.error ?? (e as any)?.message ?? 'Unknown error has occurred. Please try again.',
-                    FlashType.Danger
-                )
-            }
-            router.push("/auth/login")
+            await wrapRequest(apiLogout)
+            await router.push("/auth/login")
         }
 
         return {logout}

@@ -6,6 +6,11 @@ export interface SystemData {
     system: System
 }
 
+export interface UpdateSystemMemberData {
+    visible?: boolean,
+    description?: string
+}
+
 export interface SystemMembersData {
     members: Member[]
 }
@@ -42,9 +47,10 @@ export const getMember = (id: string): Promise<AxiosResponse<Response<SystemMemb
     method: 'GET',
 })
 
-export const getFields = (): Promise<AxiosResponse<Response<SystemFieldsData>>> => $axios.request<Response<SystemFieldsData>>({
-    url: '/system/fields',
-    method: 'GET',
+export const updateMember = (id: string, data: UpdateSystemMemberData): Promise<AxiosResponse<Response<SystemMemberData>>> => $axios.request<Response<SystemMemberData>>({
+    url: `/system/members/${id}`,
+    method: 'POST',
+    data
 })
 
 export const updateField = (id: string, data: UpdateSystemFieldRequest): Promise<AxiosResponse<Response<SystemFieldData>>> => $axios.request<Response<SystemFieldData>>({

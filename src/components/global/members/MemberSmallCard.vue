@@ -1,27 +1,31 @@
 <template>
     <router-link
-            :to="$route.path.startsWith('/admin') ? `/admin/member/${member.id}` : `${$route.fullPath}/${member.data.slug}`"
+            @click.ctrl.prevent="toggleVisibility"
+            :to="isAdmin ? `/admin/member/${systemMember.id}` : `${$route.fullPath}/${systemMember.data.slug}`"
             class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4"
-            :class="isAdmin ? member.data.visible ? 'border-l-green-500' : 'border-l-red-500' : ''"
-            :style="(!isAdmin && member.color) ? {borderLeftColor: member.color} : {}"
+            :class="isAdmin ? systemMember.data.visible ? 'border-l-green-500' : 'border-l-red-500' : ''"
+            :style="(!isAdmin && systemMember.color) ? {borderLeftColor: systemMember.color} : {}"
     >
-        <img v-if="member.avatar" :src="member.avatar" :alt="member.name"
+        <img v-if="systemMember.avatar" :src="systemMember.avatar" :alt="systemMember.name"
              class="w-16 h-16 rounded-full object-cover">
-        <Color v-else :color="member.color ?? '#e2e8f0'" class="flex-shrink-0 w-16 h-16 opacity-25"/>
+        <Color v-else :color="systemMember.color ?? '#e2e8f0'" class="flex-shrink-0 w-16 h-16 opacity-25"/>
         <div>
             <h2 class="text-xl font-medium">
-                {{ member.name }}
-                <span v-if="member.pronouns" class="text-sm text-gray-500 font-normaly">{{ member.pronouns }}</span>
+                {{ systemMember.name }}
+                <span v-if="systemMember.pronouns" class="text-sm text-gray-500 font-normaly">{{ systemMember.pronouns }}</span>
             </h2>
-            <h3 class="text-gray-700">{{ member.description }}</h3>
+            <h3 class="text-gray-700">{{ systemMember.description }}</h3>
         </div>
     </router-link>
 </template>
 <script lang="ts">
 import Color from "../color/ColorCircle.vue";
-import {computed, defineComponent, PropType} from "vue";
+import {computed, defineComponent, PropType, ref} from "vue";
 import {Member} from "../../../api/types";
 import {useRoute} from "vue-router";
+import {updateMember} from "../../../api/system";
+import {flash, FlashType} from "../../../store";
+import {formatError} from "../../../api";
 
 export default defineComponent({
     components: {
@@ -31,11 +35,38 @@ export default defineComponent({
         member: {
             type: Object as PropType<Member>,
             required: true,
+        },
+        modifiable: {
+            type: Boolean,
+            default: () => false,
         }
     },
-    setup() {
+    setup({member: _member, modifiable}) {
+        const systemMember = ref<Member>(_member);
+
+        const loading = ref(false);
+
         const route = useRoute();
+
+        const toggleVisibility = async () => {
+            if (!modifiable || loading.value) return;
+            loading.value = true;
+
+            try {
+                const res = (await updateMember(systemMember.value.id, {visible: !systemMember.value.data.visible})).data;
+                if (!res.success) throw new Error(res.error)
+
+                systemMember.value = res.data.member;
+                loading.value = false;
+            } catch (e) {
+                flash(formatError(e), FlashType.Danger, true)
+                loading.value = false;
+            }
+        }
+
         return {
+            systemMember,
+            toggleVisibility,
             isAdmin: computed(() => route.path.startsWith('/admin'))
         }
     }

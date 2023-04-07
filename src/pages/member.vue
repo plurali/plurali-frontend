@@ -15,8 +15,8 @@ import Button from "../components/Button.vue";
 import {bgColor, flash, FlashType} from "../store";
 import Spinner from "../components/Spinner.vue";
 import {Member, System} from "../api/types";
-import {formatError} from "../api";
-import {getMember} from "../api/public";
+import {formatError, wrapRequest} from "../api";
+import {getMember, getSystem} from "../api/public";
 import Color from "../components/global/color/ColorCircle.vue";
 import {useRoute} from "vue-router";
 import {useGoBack} from "../composables/goBack";
@@ -49,20 +49,11 @@ export default defineComponent({
         useGoBack(`/${systemId.value}`);
 
         const fetchMember = async () => {
-            if (member.value === null) return
-            member.value = null;
-            try {
-                const res = (await getMember(systemId.value, getRouteParam(route.params.memberId))).data
-                if (!res.success) throw new Error(res.error);
+            const res = await wrapRequest(() => getMember(systemId.value, getRouteParam(route.params.memberId)));
+            member.value = res ? res.member : res;
 
-                if (res.data.member.color) {
-                    bgColor.value = res.data.member.color;
-                }
-
-                member.value = res.data.member;
-            } catch (e) {
-                member.value = false;
-                flash(formatError(e), FlashType.Danger, true)
+            if (res && res.member.color) {
+                bgColor.value = res.member.color;
             }
         }
 

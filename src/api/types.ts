@@ -9,10 +9,22 @@ export interface MemberFieldData {
     visible: boolean
 }
 
+export enum MemberFieldType {
+    String = 'String',
+    Color = 'Color',
+    Date = 'Date',
+    Month = 'Month',
+    Year = 'Year',
+    MonthYear = 'MonthYear',
+    Timestamp = 'Timestamp',
+    MonthDay = 'MonthDay'
+}
+
 export interface MemberField {
     fieldId: string,
     name: string,
     position: number,
+    type: MemberFieldType,
     pluralVisibility: Visibility
     data: MemberFieldData
 }

@@ -33,7 +33,7 @@ import Label from "../../components/Label.vue";
 import {updateUser} from "../../api/user";
 import {clearFlashes, flash, FlashType, user} from "../../store"
 import Spinner from "../../components/Spinner.vue";
-import {formatError} from "../../api";
+import {formatError, wrapRequest} from "../../api";
 import {useGoBack} from "../../composables/goBack";
 
 export default defineComponent({
@@ -69,13 +69,12 @@ export default defineComponent({
         const submit = async () => {
             if (loading.value) return;
             loading.value = true
-            clearFlashes();
-            try {
-                await updateUser(form);
+
+            const ok = await wrapRequest(() => updateUser(form))
+            if (ok) {
                 flash("Changes saved!", FlashType.Success, true)
-            } catch (e) {
-                flash(formatError(e), FlashType.Danger, true)
             }
+
             loading.value = false
         }
 

@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <CustomFields :fields="data.member.fields" :modifiable="true" title="System-wide Custom Fields"/>
+        <CustomFields :fields="data.member.fields" :modifiable="true" :hide-no-values="true" title="System-wide Custom Fields"/>
     </Fetchable>
 </template>
 
@@ -36,7 +36,7 @@ import Button from "../../components/Button.vue";
 import {bgColor, flash, FlashType} from "../../store";
 import Spinner from "../../components/Spinner.vue";
 import {Member, System} from "../../api/types";
-import {formatError} from "../../api";
+import {formatError, wrapRequest} from "../../api";
 import {getMember, getSystem} from "../../api/system";
 import Color from "../../components/global/color/ColorCircle.vue";
 import {useRoute} from "vue-router";
@@ -71,23 +71,17 @@ export default defineComponent({
         const fetchAll = async () => {
             if (data.system === null || data.member === null) return;
             data.system = data.member = null;
-            try {
-                const sys = (await getSystem()).data
-                if (!sys.success) throw new Error(sys.error);
 
-                data.system = sys.data.system;
+            let sys = await wrapRequest(getSystem);
+            data.system = sys ? sys.system : sys;
 
-                const mem = (await getMember(getRouteParam(route.params.id))).data
-                if (!mem.success) throw new Error(mem.error);
+            if (sys) {
+                let mem = await wrapRequest(() => getMember(getRouteParam(route.params.id)))
+                data.member = mem ? mem.member : mem;
 
-                if (mem.data.member.color) {
-                    bgColor.value = mem.data.member.color;
+                if (data.member && data.member.color) {
+                    bgColor.value = data.member.color;
                 }
-
-                data.member = mem.data.member;
-            } catch (e) {
-                data.system = data.member = false;
-                flash(formatError(e), FlashType.Danger, true)
             }
         }
 
