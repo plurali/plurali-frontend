@@ -22,6 +22,7 @@ import Button from "../../components/Button.vue";
 import {logout as apiLogout} from "../../api/auth";
 import {flash, FlashType} from "../../store";
 import { useRouter } from 'vue-router';
+import {useGoBack} from "../../composables/goBack";
 
 export default defineComponent({
     components: {
@@ -32,6 +33,8 @@ export default defineComponent({
     },
     setup() {
         const router = useRouter();
+
+        useGoBack(null);
 
         const logout = async () => {
             try {

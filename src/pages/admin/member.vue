@@ -1,29 +1,34 @@
 <template>
-    <div v-if="!loading && member">
-        <div class="mb-5 flex gap-4 items-center">
-            <img v-if="member.avatar" :src="member.avatar" :alt="member.name" class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
-            <Color v-else :color="member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
+    <Fetchable :result="data.member" :retry="fetchAll">
+        <div class="mb-5 flex gap-2 justify-left items-center gap-4">
+            <img v-if="data.member.avatar" :src="data.member.avatar" :alt="data.member.name" class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
+            <Color v-else :color="data.member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
             <div>
-                <p class="text-sm text-gray-700">SID: {{ member.id }}</p>
-                <Title>{{ member.name }} <span v-if="member.pronouns" class="text-sm text-gray-500">{{member.pronouns}}</span></Title>
-                <p>{{ member.description ?? 'No description' }}</p>
+                <p class="text-sm text-gray-700">SID: {{ data.member.id }}</p>
+                <Title class="text-violet-700">
+                    {{ data.member.name }}
+                    <a
+                        :href="`/${data.system.data.slug}/${data.member.data.slug}`"
+                        class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Click to open public view
+                    </a>
+                </Title>
+                <Subtitle class="mb-3">{{ data.member.description ?? 'No description' }}</Subtitle>
+                <span v-if="data.member.color" class="inline-flex items-center gap-1">
+                        Color: {{ data.member.color }} <ColorCircle :color="data.member.color"/>
+                    </span>
             </div>
         </div>
 
-    </div>
-    <div v-else-if="member === false" class="inline-flex w-full justify-center items-center">
-        <Button class="border border-gray-700 text-gray-700" @click.prevent="fetchMember">Try again</Button>
-    </div>
-    <div v-else class="inline-flex w-full justify-center items-center">
-        <Spinner class="!text-violet-700 w-10 h-10"/>
-    </div>
-    <div class="inline-flex w-full justify-start items-center">
-        <router-link to="/admin/system" class="text-gray-500">Go back</router-link>
-    </div>
+        <CustomFields :fields="data.member.fields" :modifiable="true" title="System-wide Custom Fields"/>
+    </Fetchable>
 </template>
 
 <script lang="ts">
-import {defineComponent, onBeforeUnmount, onMounted, ref} from 'vue';
+import {defineComponent, onBeforeUnmount, onMounted, reactive, ref} from 'vue';
 import Title from "../../components/Title.vue";
 import Subtitle from "../../components/Subtitle.vue";
 import ButtonLink from "../../components/ButtonLink.vue";
@@ -32,12 +37,20 @@ import {bgColor, flash, FlashType} from "../../store";
 import Spinner from "../../components/Spinner.vue";
 import {Member, System} from "../../api/types";
 import {formatError} from "../../api";
-import {getMember, getMembers, getSystem} from "../../api/system";
-import Color from "../../components/Color.vue";
+import {getMember, getSystem} from "../../api/system";
+import Color from "../../components/global/color/ColorCircle.vue";
 import {useRoute} from "vue-router";
+import {useGoBack} from "../../composables/goBack";
+import Fetchable from "../../components/global/Fetchable.vue";
+import CustomFields from "../../components/global/fields/CustomFields.vue";
+import ColorCircle from "../../components/global/color/ColorCircle.vue";
+import {getRouteParam} from "../../utils";
 
 export default defineComponent({
     components: {
+        ColorCircle,
+        CustomFields,
+        Fetchable,
         Spinner,
         Title,
         Subtitle,
@@ -46,42 +59,47 @@ export default defineComponent({
         Color
     },
     setup() {
-        const member = ref<Member | null | false>(null);
-
-        const loading = ref(false);
+        const data = reactive({
+            system: false as System|null|false,
+            member: false as Member|null|false
+        });
 
         const route = useRoute()
 
-        const fetchMember = async () => {
-            if (loading.value) return;
-            loading.value = true;
-            member.value = null;
-            try {
-                const res = (await getMember(Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)).data
-                if (!res.success) throw new Error(res.error);
+        useGoBack('/admin/system');
 
-                if (res.data.member.color) {
-                    bgColor.value = res.data.member.color;
+        const fetchAll = async () => {
+            if (data.system === null || data.member === null) return;
+            data.system = data.member = null;
+            try {
+                const sys = (await getSystem()).data
+                if (!sys.success) throw new Error(sys.error);
+
+                data.system = sys.data.system;
+
+                const mem = (await getMember(getRouteParam(route.params.id))).data
+                if (!mem.success) throw new Error(mem.error);
+
+                if (mem.data.member.color) {
+                    bgColor.value = mem.data.member.color;
                 }
 
-                member.value = res.data.member;
+                data.member = mem.data.member;
             } catch (e) {
-                member.value = false;
+                data.system = data.member = false;
                 flash(formatError(e), FlashType.Danger, true)
             }
-            loading.value = false;
         }
 
-        onMounted(() => fetchMember())
+        onMounted(() => fetchAll())
 
         onBeforeUnmount(() => {
             bgColor.value = null;
         })
 
         return {
-            fetchMember,
-            loading,
-            member
+            fetchAll,
+            data
         }
     }
 })

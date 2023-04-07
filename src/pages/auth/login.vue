@@ -23,9 +23,9 @@
             </InputError>
         </div>
 
-        <Button :disabled="loading" type="submit" class="w-full border border-violet-700 text-violet-700 mb-3.5">
-            <p v-if="!loading">Login</p>
-            <Spinner v-else/>
+        <Button :disabled="loading" type="submit" class="w-full border border-violet-700 text-violet-700 mb-3.5 inline-flex justify-between items-center">
+            <p >Login</p>
+            <Spinner v-if="loading" class="!text-violet-700"/>
         </Button>
 
         <div class="inline-flex w-full justify-end items-center">

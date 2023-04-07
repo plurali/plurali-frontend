@@ -30,6 +30,14 @@ const routes: RouteRecordRaw[] = [
             {
                 path: "/admin/member/:id",
                 component: () => import("./pages/admin/member.vue")
+            },
+            {
+                path: "/:systemId",
+                component: () => import("./pages/system.vue")
+            },
+            {
+                path: "/:systemId/:memberId",
+                component: () => import("./pages/member.vue")
             }
         ]
     }

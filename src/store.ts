@@ -34,4 +34,6 @@ export const clearFlashes = () => flashes.value = [];
 
 export const bgColor = ref<string|null>(null);
 
+export const goBack = ref<string|null>(null);
+
 export const user = ref<User|null>(null);

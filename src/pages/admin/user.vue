@@ -21,10 +21,6 @@
             <p v-if="!loading">Update user settings</p>
             <Spinner v-else/>
         </Button>
-
-        <div class="inline-flex w-full justify-start items-center">
-            <router-link to="/admin" class="text-gray-500">Go back</router-link>
-        </div>
     </form>
 </template>
 
@@ -38,6 +34,7 @@ import {updateUser} from "../../api/user";
 import {clearFlashes, flash, FlashType, user} from "../../store"
 import Spinner from "../../components/Spinner.vue";
 import {formatError} from "../../api";
+import {useGoBack} from "../../composables/goBack";
 
 export default defineComponent({
     components: {
@@ -58,6 +55,8 @@ export default defineComponent({
         })
 
         const loading = ref(false);
+
+        useGoBack('/admin')
 
         const validate = () => {
             formErrors.pluralKey = !form.pluralKey || form.pluralKey.trim().length < 32

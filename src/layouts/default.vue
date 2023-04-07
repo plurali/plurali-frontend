@@ -30,6 +30,10 @@
                 </Flash>
             </div>
             <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <div v-if="goBack" class="mb-5 inline-flex w-full justify-start items-center">
+                    <router-link :to="goBack" class="text-gray-500 hover:text-black transition">← Go back</router-link>
+                </div>
+
                 <router-view/>
             </div>
         </div>
@@ -38,7 +42,7 @@
 
 <script lang="ts">
 import {computed, defineComponent} from 'vue';
-import {bgColor, flashes} from "../store"
+import {bgColor, flashes, goBack} from "../store"
 import Flash from '../components/Flash.vue';
 import {generateShades} from "../utils/colors";
 
@@ -50,6 +54,7 @@ export default defineComponent({
         return {
             flashes,
             colors,
+            goBack
         };
     },
     components: {Flash}
