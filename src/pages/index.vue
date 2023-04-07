@@ -5,12 +5,8 @@
     </div>
 
     <div class="inline-flex items-center gap-2">
-        <ButtonLink to="/auth/register" class="text-white bg-violet-700">
-            Register
-        </ButtonLink>
-
-        <ButtonLink to="/auth/login" class="border border-violet-700 text-violet-700">
-            Login
+        <ButtonLink to="/admin" class="text-white bg-violet-700">
+            Dashboard
         </ButtonLink>
     </div>
 </template>
@@ -27,8 +23,5 @@ export default defineComponent({
         Subtitle,
         ButtonLink
     },
-    setup() {
-
-    }
 })
 </script>

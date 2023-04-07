@@ -1,5 +1,5 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
-import { error, user } from "./store";
+import {flash, flashes, FlashType, user} from "./store";
 import { getUser } from "./api/user";
 
 const routes: RouteRecordRaw[] = [
@@ -16,12 +16,32 @@ const routes: RouteRecordRaw[] = [
                 component: () => import("./pages/auth/login.vue")
             },
             {
+                path: "/auth/register",
+                component: () => import("./pages/auth/register.vue")
+            },
+            {
                 path: "/admin",
                 component: () => import("./pages/admin/index.vue")
             },
             {
                 path: "/admin/user",
                 component: () => import("./pages/admin/user.vue")
+            },
+            {
+                path: "/admin/system",
+                component: () => import("./pages/admin/system.vue")
+            },
+            {
+                path: "/admin/member/:id",
+                component: () => import("./pages/admin/member.vue")
+            },
+            {
+                path: "/:systemId",
+                component: () => import("./pages/system.vue")
+            },
+            {
+                path: "/:systemId/:memberId",
+                component: () => import("./pages/member.vue")
             }
         ]
     }
@@ -33,6 +53,8 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
+    flashes.value = [];
+
     try {
         const data = (await getUser()).data;
         if (!data.success) throw new Error();
@@ -52,7 +74,7 @@ router.beforeEach(async (to) => {
         }
 
         if (!user.value.pluralKey) {
-            error.value = "You must setup your Simply Plural API key!"
+            flash("You must setup your Simply Plural API key!", FlashType.Danger)
             if (to.path !== "/admin/user") {
                 router.push("/admin/user")
             }
