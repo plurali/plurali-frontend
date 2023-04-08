@@ -1,8 +1,8 @@
 <template>
     <Fetchable :retry="fetchSystem" :result="system">
-        <SystemSummary :system="system"/>
+        <SystemSummary v-if="system" :system="system"/>
 
-        <CustomFields :fields="system.fields" :modifiable="true"/>
+        <CustomFields v-if="system" :fields="system.fields" :modifiable="true"/>
 
         <Members/>
     </Fetchable>
@@ -12,9 +12,9 @@
 import {defineComponent, onBeforeUnmount, onMounted, ref} from 'vue';
 import Title from "../../components/Title.vue";
 import Subtitle from "../../components/Subtitle.vue";
-import {bgColor, flash, FlashType} from "../../store";
+import {bgColor} from "../../store";
 import {System} from "../../api/types";
-import {formatError, wrapRequest} from "../../api";
+import {wrapRequest} from "../../api";
 import {getSystem} from "../../api/system";
 import ColorCircle from "../../components/global/color/ColorCircle.vue";
 import CustomFields from "../../components/global/fields/CustomFields.vue";
@@ -36,13 +36,17 @@ export default defineComponent({
         ColorCircle
     },
     setup() {
-        const system = ref<System | null | false>(null);
+        const system = ref<System | null | false>(false);
 
         useGoBack('/admin')
 
         const fetchSystem = async () => {
+            if (system.value === null) return;
+            system.value = null;
+
             const res = await wrapRequest(getSystem);
             system.value = res ? res.system : res;
+
             if (res && res.system.color) {
                 bgColor.value = res.system.color;
             }

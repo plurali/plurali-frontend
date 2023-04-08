@@ -1,15 +1,16 @@
 <template>
     <div class="mb-5 flex gap-2 justify-left items-center gap-4">
-        <img v-if="system.avatar" :src="system.avatar" :alt="system.username"
+        <img v-if="currentSystem.avatar" :src="currentSystem.avatar" :alt="currentSystem.username"
              class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
-        <Color v-else :color="system.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
+        <Color v-else :color="currentSystem.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
         <div>
-            <p class="text-sm text-gray-700" v-if="isAdmin">SID: {{ system.id }}</p>
-            <PageTitle class="text-violet-700">
-                {{ system.username }}
+            <p class="text-sm text-gray-700" v-if="isAdmin">SID: {{ currentSystem.id }}</p>
+            <PageTitle class="inline-flex items-center justify-center gap-3">
+                {{ currentSystem.username }}
+                <VisibilityTag :disabled="toggling" :visible="currentSystem.data.visible" @click.prevent="toggleVisibility"/>
                 <a
-                        v-if="isAdmin"
-                        :href="`/${system.data.slug}`"
+                        v-if="isAdmin && currentSystem.data.visible"
+                        :href="`/${currentSystem.data.slug}`"
                         class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -17,9 +18,9 @@
                     Click to open public view
                 </a>
             </PageTitle>
-            <Subtitle class="mb-3">{{ system.description ?? 'No description' }}</Subtitle>
-            <span v-if="system.color" class="inline-flex items-center gap-1">
-                        Color: {{ system.color }} <ColorCircle :color="system.color"/>
+            <Subtitle class="mb-3">{{ currentSystem.description ?? 'No description' }}</Subtitle>
+            <span v-if="currentSystem.color" class="inline-flex text-gray-700 items-center gap-1">
+                        Color: {{ currentSystem.color }} <ColorCircle :color="currentSystem.color"/>
                     </span>
         </div>
     </div>
@@ -29,12 +30,16 @@ import PageTitle from "../../Title.vue";
 import Color from "../color/ColorCircle.vue";
 import Subtitle from "../../Subtitle.vue";
 import ColorCircle from "../color/ColorCircle.vue";
-import {computed, defineComponent, PropType} from "vue";
+import {computed, defineComponent, PropType, ref} from "vue";
 import {System} from "../../../api/types";
 import {useRoute} from "vue-router";
+import VisibilityTag from "../visibility/VisibilityTag.vue";
+import {wrapRequest} from "../../../api";
+import {updateMember, updateSystem} from "../../../api/system";
 
 export default defineComponent({
     components: {
+        VisibilityTag,
         PageTitle,
         Color,
         Subtitle,
@@ -46,11 +51,34 @@ export default defineComponent({
             required: true
         }
     },
-    setup() {
-      const route = useRoute();
-      return {
-          isAdmin: computed(() => route.path.startsWith('/admin'))
-      }
+    setup({system: _system}) {
+        const route = useRoute();
+
+        const toggling = ref(false);
+
+        const currentSystem = ref(_system)
+
+        const toggleVisibility = async () => {
+            if (toggling.value) return;
+            toggling.value = true;
+
+            const res = await wrapRequest(() => updateSystem(currentSystem.value.id, {
+                visible: !currentSystem.value.data.visible
+            }))
+
+            // fail??? refresh
+            if (!res) return window.location.href = ''
+
+            currentSystem.value = res.system
+            toggling.value = false;
+        }
+
+        return {
+            currentSystem,
+            toggleVisibility,
+            toggling,
+            isAdmin: computed(() => route.path.startsWith('/admin'))
+        }
     }
 })
 </script>

@@ -40,7 +40,8 @@ export default defineComponent({
         Color
     },
     setup() {
-        const member = ref<Member|null|false>(false);
+        // TODO Member|null|false
+        const member = ref<any>(false);
 
         const route = useRoute()
 
@@ -49,6 +50,9 @@ export default defineComponent({
         useGoBack(`/${systemId.value}`);
 
         const fetchMember = async () => {
+            if (member.value === null) return;
+            member.value = null;
+
             const res = await wrapRequest(() => getMember(systemId.value, getRouteParam(route.params.memberId)));
             member.value = res ? res.member : res;
 

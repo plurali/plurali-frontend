@@ -1,8 +1,8 @@
 <template>
     <Fetchable :retry="fetchSystem" :result="system">
-        <SystemSummary :system="system"/>
+        <SystemSummary v-if="system" :system="system"/>
 
-        <CustomFields :fields="system.fields" :modifiable="false"/>
+        <CustomFields  v-if="system" :fields="system.fields" :modifiable="false"/>
 
         <Members/>
     </Fetchable>
@@ -47,6 +47,9 @@ export default defineComponent({
         const route = useRoute()
 
         const fetchSystem = async () => {
+            if (system.value === null) return;
+            system.value = null;
+
             const res = await wrapRequest(() => getSystem(getRouteParam(route.params.systemId)));
             system.value = res ? res.system : res;
 

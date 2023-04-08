@@ -1,43 +1,48 @@
 <template>
     <Fetchable :result="data.member" :retry="fetchAll">
         <div class="mb-5 flex gap-2 justify-left items-center gap-4">
-            <img v-if="data.member.avatar" :src="data.member.avatar" :alt="data.member.name" class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
+            <img v-if="data.member.avatar" :src="data.member.avatar" :alt="data.member.name"
+                 class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
             <Color v-else :color="data.member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
             <div>
                 <p class="text-sm text-gray-700">SID: {{ data.member.id }}</p>
-                <Title class="text-violet-700">
+                <PageTitle class="text-violet-700 inline-flex items-center justify-center gap-3">
                     {{ data.member.name }}
-                    <a
-                        :href="`/${data.system.data.slug}/${data.member.data.slug}`"
-                        class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Click to open public view
-                    </a>
-                </Title>
+                    <span class="inline-flex items-center justify-center gap-3">
+                        <VisibilityTag :disabled="toggling" :visible="data.member.data.visible" @click.prevent="toggleVisibility"/>
+                        <a
+                            v-if="isAdmin && data.member.data.visible"
+                            :href="`/${data.system.data.slug}/${data.member.data.slug}`"
+                            class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Open public view
+                        </a>
+                    </span>
+                </PageTitle>
                 <Subtitle class="mb-3">{{ data.member.description ?? 'No description' }}</Subtitle>
-                <span v-if="data.member.color" class="inline-flex items-center gap-1">
+                <span v-if="data.member.color" class="inline-flex text-gray-700 items-center gap-1">
                         Color: {{ data.member.color }} <ColorCircle :color="data.member.color"/>
                     </span>
             </div>
         </div>
 
-        <CustomFields :fields="data.member.fields" :modifiable="true" :hide-no-values="true" title="System-wide Custom Fields"/>
+        <CustomFields :fields="data.member.fields" :modifiable="true" :hide-no-values="true"
+                      title="System-wide Custom Fields"/>
     </Fetchable>
 </template>
 
 <script lang="ts">
-import {defineComponent, onBeforeUnmount, onMounted, reactive, ref} from 'vue';
-import Title from "../../components/Title.vue";
+import {computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref} from 'vue';
+import PageTitle from "../../components/Title.vue";
 import Subtitle from "../../components/Subtitle.vue";
 import ButtonLink from "../../components/ButtonLink.vue";
 import Button from "../../components/Button.vue";
-import {bgColor, flash, FlashType} from "../../store";
-import Spinner from "../../components/Spinner.vue";
+import {bgColor} from "../../store";
 import {Member, System} from "../../api/types";
 import {formatError, wrapRequest} from "../../api";
-import {getMember, getSystem} from "../../api/system";
+import {getMember, getSystem, updateMember} from "../../api/system";
 import Color from "../../components/global/color/ColorCircle.vue";
 import {useRoute} from "vue-router";
 import {useGoBack} from "../../composables/goBack";
@@ -45,26 +50,30 @@ import Fetchable from "../../components/global/Fetchable.vue";
 import CustomFields from "../../components/global/fields/CustomFields.vue";
 import ColorCircle from "../../components/global/color/ColorCircle.vue";
 import {getRouteParam} from "../../utils";
+import VisibilityTag from "../../components/global/visibility/VisibilityTag.vue";
 
 export default defineComponent({
     components: {
+        VisibilityTag,
         ColorCircle,
         CustomFields,
         Fetchable,
-        Spinner,
-        Title,
+        PageTitle,
         Subtitle,
         ButtonLink,
         Button,
         Color
     },
     setup() {
-        const data = reactive({
-            system: false as System|null|false,
-            member: false as Member|null|false
+        // TODO
+        const data = reactive<any>({
+            system: false as System | null | false,
+            member: false as Member | null | false
         });
 
         const route = useRoute()
+
+        const toggling = ref(false);
 
         useGoBack('/admin/system');
 
@@ -85,6 +94,18 @@ export default defineComponent({
             }
         }
 
+        const toggleVisibility = async () => {
+            if (toggling.value) return;
+            toggling.value = true;
+
+            const res = await wrapRequest(() => updateMember(data.member!.id, {
+                visible: !data.member!.data.visible
+            }))
+
+            data.member = res ? res.member : res;
+            toggling.value = false;
+        }
+
         onMounted(() => fetchAll())
 
         onBeforeUnmount(() => {
@@ -93,7 +114,10 @@ export default defineComponent({
 
         return {
             fetchAll,
-            data
+            data,
+            toggling,
+            toggleVisibility,
+            isAdmin: computed(() => route.path.startsWith("/admin"))
         }
     }
 })

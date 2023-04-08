@@ -11,7 +11,7 @@
                 placeholder="Simply Plural API key" />
         </div>
 
-        <div class="mb-3.5" v-if="user.admin">
+        <div class="mb-3.5" v-if="user!.admin">
             <Label>Override Plural ID</Label>
             <input :disabled="loading" v-model="form.overridePluralId" @keyup="validate" class="w-full p-2.5 border rounded-xl border-gray-400"
                    placeholder="Override Plural ID" />

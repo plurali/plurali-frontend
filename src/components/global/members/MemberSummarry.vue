@@ -7,18 +7,18 @@
             <p v-if="isAdmin" class="text-sm text-gray-700">SID: {{ member.id }}</p>
             <PageTitle class="text-violet-700">
                 {{ member.name }}
-                <a
+               <!-- <a
                         v-if="isAdmin"
-                        :href="`/${systemId}/${member.data.slug}`"
+                        :href="`${systemId}/${member.data.slug}`"
                         class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
                         target="_blank"
                         rel="noopener noreferrer"
                 >
                     Click to open public view
-                </a>
+                </a>-->
             </PageTitle>
             <Subtitle class="mb-3">{{ member.description ?? 'No description' }}</Subtitle>
-            <span v-if="member.color" class="inline-flex items-center gap-1">
+            <span v-if="member.color" class="inline-flex text-gray-700 items-center gap-1">
                 Color: {{ member.color }} <ColorCircle :color="member.color"/>
             </span>
         </div>

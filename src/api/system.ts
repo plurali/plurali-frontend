@@ -2,6 +2,11 @@ import { AxiosResponse } from "axios"
 import { $axios, Response } from "."
 import {Member, MemberField, MemberFieldData, System} from "./types"
 
+export interface UpdateSystemData {
+    visible?: boolean,
+    description?: string
+}
+
 export interface SystemData {
     system: System
 }
@@ -35,6 +40,12 @@ export interface SystemFieldsData {
 export const getSystem = (): Promise<AxiosResponse<Response<SystemData>>> => $axios.request<Response<SystemData>>({
     url: '/system',
     method: 'GET',
+})
+
+export const updateSystem = (id: string, data: UpdateSystemData): Promise<AxiosResponse<Response<SystemData>>> => $axios.request<Response<SystemData>>({
+    url: `/system`,
+    method: 'POST',
+    data
 })
 
 export const getMembers = (): Promise<AxiosResponse<Response<SystemMembersData>>> => $axios.request<Response<SystemMembersData>>({

@@ -5,7 +5,7 @@
         :class="[isAdmin ? customField.data.visible ? 'border-l-green-500' : 'border-l-red-500' : '', loading && 'bg-gray-200']"
     >
         <p class="font-medium">{{ customField.name }}</p>
-        <p v-if="value?.length >= 1" class="text-gray-500">
+        <p v-if="(value?.length ?? 0) >= 1" class="text-gray-500">
             <span v-if="customField.type === 'Color'" class="inline-flex justify-center items-center gap-2">
                 <ColorCircle :color="value!"/>
                 <span class="text-sm">{{ value }}</span>

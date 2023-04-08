@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {defineComponent, PropType} from 'vue'
 import Spinner from "../Spinner.vue";
 import Button from "../Button.vue";
 
@@ -18,7 +18,7 @@ export default defineComponent({
         result: {
         },
         retry: {
-            type: Function,
+            type: Function as PropType<() => any>,
             required: false,
             default: () => () => {}
         },

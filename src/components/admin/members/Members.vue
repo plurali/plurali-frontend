@@ -1,6 +1,6 @@
 <template>
     <Fetchable :result="members" retry-text="Load members" :retry="fetchMembers">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-5">
+        <div v-if="members" class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-5">
             <MemberSmallCard v-for="member of members" :member="member" :modifiable="true"/>
         </div>
     </Fetchable>
