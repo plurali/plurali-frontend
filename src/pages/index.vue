@@ -5,7 +5,7 @@
     </div>
 
     <div class="inline-flex items-center gap-2">
-        <ButtonLink to="/admin" class="text-white bg-violet-700">
+        <ButtonLink to="/dashboard" class="text-white bg-violet-700">
             Dashboard
         </ButtonLink>
     </div>

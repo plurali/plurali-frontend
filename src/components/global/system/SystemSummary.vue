@@ -4,12 +4,12 @@
              class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
         <Color v-else :color="currentSystem.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
         <div>
-            <p class="text-sm text-gray-700" v-if="isAdmin">SID: {{ currentSystem.id }}</p>
+            <p class="text-sm text-gray-700" v-if="isDashboard">SID: {{ currentSystem.id }}</p>
             <PageTitle class="inline-flex items-center justify-center gap-3">
                 {{ currentSystem.username }}
-                <VisibilityTag v-if="isAdmin" :disabled="toggling" :visible="currentSystem.data.visible" @click.prevent="toggleVisibility"/>
+                <VisibilityTag v-if="isDashboard" :disabled="toggling" :visible="currentSystem.data.visible" @click.prevent="toggleVisibility"/>
                 <a
-                        v-if="isAdmin && currentSystem.data.visible"
+                        v-if="isDashboard && currentSystem.data.visible"
                         :href="`/${currentSystem.data.slug}`"
                         class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
                         target="_blank"
@@ -77,7 +77,7 @@ export default defineComponent({
             currentSystem,
             toggleVisibility,
             toggling,
-            isAdmin: computed(() => route.path.startsWith('/admin'))
+            isDashboard: computed(() => route.path.startsWith('/dashboard'))
         }
     }
 })

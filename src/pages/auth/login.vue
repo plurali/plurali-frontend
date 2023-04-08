@@ -91,7 +91,7 @@ export default defineComponent({
             loading.value = false
 
             if (ok) {
-                await router.push("/admin")
+                await router.push("/dashboard")
             }
         }
 

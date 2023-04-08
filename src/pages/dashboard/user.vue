@@ -56,7 +56,7 @@ export default defineComponent({
 
         const loading = ref(false);
 
-        useGoBack('/admin')
+        useGoBack('/dashboard')
 
         const validate = () => {
             formErrors.pluralKey = !form.pluralKey || form.pluralKey.trim().length < 32

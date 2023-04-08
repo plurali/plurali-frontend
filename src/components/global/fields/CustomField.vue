@@ -2,7 +2,7 @@
     <div
         @click.ctrl.prevent="toggleVisibility"
         class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer"
-        :class="[isAdmin ? customField.data.visible ? 'border-l-green-500' : 'border-l-red-500' : '', loading && 'bg-gray-200']"
+        :class="[isDashboard ? customField.data.visible ? 'border-l-green-500' : 'border-l-red-500' : '', loading && 'bg-gray-200']"
     >
         <p class="font-medium">{{ customField.name }}</p>
         <p v-if="(value?.length ?? 0) >= 1" class="text-gray-500">
@@ -74,7 +74,7 @@ export default defineComponent({
             loading,
             formatField,
             value: computed(() => (customField.value as any).value ? formatField(customField.value as any as MemberFieldWithValue)  : ''),
-            isAdmin: computed(() => route.path.startsWith('/admin'))
+            isDashboard: computed(() => route.path.startsWith('/dashboard'))
         }
     }
 })

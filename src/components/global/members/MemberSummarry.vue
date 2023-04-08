@@ -4,11 +4,11 @@
              class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
         <ColorCircle v-else :color="member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
         <div>
-            <p v-if="isAdmin" class="text-sm text-gray-700">SID: {{ member.id }}</p>
+            <p v-if="isDashboard" class="text-sm text-gray-700">SID: {{ member.id }}</p>
             <PageTitle class="text-violet-700">
                 {{ member.name }}
                <!-- <a
-                        v-if="isAdmin"
+                        v-if="isDashboard"
                         :href="`${systemId}/${member.data.slug}`"
                         class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
                         target="_blank"
@@ -47,7 +47,7 @@ export default defineComponent({
     setup() {
         const route = useRoute();
         return {
-            isAdmin: computed(() => route.path.startsWith('/admin'))
+            isDashboard: computed(() => route.path.startsWith('/dashboard'))
         }
     }
 })

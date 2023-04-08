@@ -5,9 +5,9 @@
     </div>
 
     <div class="inline-flex items-center gap-2">
-        <ButtonLink to="/admin/user" class="bg-violet-700 text-white">User settings</ButtonLink>
+        <ButtonLink to="/dashboard/user" class="bg-violet-700 text-white">User settings</ButtonLink>
 
-        <ButtonLink to="/admin/system" class="bg-violet-700 text-white">System</ButtonLink>
+        <ButtonLink to="/dashboard/system" class="bg-violet-700 text-white">System</ButtonLink>
 
         <Button @click.prevent="logout" class="border border-violet-700 text-violet-700">Logout</Button>
     </div>

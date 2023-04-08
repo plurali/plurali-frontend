@@ -38,7 +38,7 @@ export default defineComponent({
     setup() {
         const system = ref<System | null | false>(false);
 
-        useGoBack('/admin')
+        useGoBack('/dashboard')
 
         const fetchSystem = async () => {
             if (system.value === null) return;
