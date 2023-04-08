@@ -1,6 +1,6 @@
 <template>
     <Fetchable :result="data.member" :retry="fetchAll">
-        <div class="mb-5 flex gap-2 justify-left items-center gap-4">
+        <div class="mb-5 flex flex-col text-center sm:flex-row sm:text-left gap-2 justify-left items-center gap-4">
             <img v-if="data.member.avatar" :src="data.member.avatar" :alt="data.member.name"
                  class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
             <Color v-else :color="data.member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>

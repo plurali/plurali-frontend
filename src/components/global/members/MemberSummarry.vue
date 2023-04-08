@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-5 flex gap-2 justify-left items-center gap-4">
+    <div class="mb-5 flex flex-col gap-2 justify-left items-center gap-4">
         <img v-if="member.avatar" :src="member.avatar" :alt="member.name"
              class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
         <ColorCircle v-else :color="member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
@@ -7,15 +7,6 @@
             <p v-if="isDashboard" class="text-sm text-gray-700">SID: {{ member.id }}</p>
             <PageTitle class="text-violet-700">
                 {{ member.name }}
-               <!-- <a
-                        v-if="isDashboard"
-                        :href="`${systemId}/${member.data.slug}`"
-                        class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                >
-                    Click to open public view
-                </a>-->
             </PageTitle>
             <Subtitle class="mb-3">{{ member.description ?? 'No description' }}</Subtitle>
             <span v-if="member.color" class="inline-flex text-gray-700 items-center gap-1">

@@ -1,6 +1,6 @@
 <template>
     <div
-        @click.ctrl.prevent="toggleVisibility"
+        @click.prevent="toggleVisibility"
         class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer"
         :class="[isDashboard ? customField.data.visible ? 'border-l-green-500' : 'border-l-red-500' : '', loading && 'bg-gray-200']"
     >

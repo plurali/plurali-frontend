@@ -1,9 +1,15 @@
 <template>
     <router-link
+            :disabled="loading"
+            :aria-disabled="loading"
             @click.ctrl.prevent="toggleVisibility"
+            v-long-press="toggleVisibility"
             :to="isDashboard ? `/dashboard/member/${systemMember.id}` : `${$route.fullPath}/${systemMember.data.slug}`"
-            class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4"
-            :class="isDashboard ? systemMember.data.visible ? 'border-l-green-500' : 'border-l-red-500' : ''"
+            class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4 transition"
+            :class="[
+                isDashboard ? systemMember.data.visible ? 'border-l-green-500' : 'border-l-red-500' : '',
+                loading && 'bg-gray-200'
+            ]"
             :style="(!isDashboard && systemMember.color) ? {borderLeftColor: systemMember.color} : {}"
     >
         <img v-if="systemMember.avatar" :src="systemMember.avatar" :alt="systemMember.name"
@@ -67,6 +73,7 @@ export default defineComponent({
         return {
             systemMember,
             toggleVisibility,
+            loading,
             isDashboard: computed(() => route.path.startsWith('/dashboard'))
         }
     }

@@ -17,9 +17,9 @@
                    placeholder="Override Plural ID" />
         </div>
 
-        <Button :disabled="loading" type="submit" class="w-full border border-violet-700 text-violet-700 mb-3.5">
-            <p v-if="!loading">Update user settings</p>
-            <Spinner v-else/>
+        <Button :disabled="loading" type="submit" class="w-full border border-violet-700 text-violet-700 mb-3.5 inline-flex justify-between items-center">
+            <p>Update user settings</p>
+            <Spinner v-if="loading" class="!text-violet-700"/>
         </Button>
     </form>
 </template>

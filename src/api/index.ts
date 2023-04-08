@@ -14,7 +14,7 @@ export interface ErrorResponse {
 export type Response<TData extends object> = SuccessResponse<TData> | ErrorResponse;
 
 export const $axios = axios.create({
-    baseURL: (import.meta as any).env?.DEV ? "http://localhost:3000" : 'https://plurali.icu/api',
+    baseURL: (import.meta as any).env?.DEV ? "http://rayliliannotraychel.local:3000" : 'https://plurali.icu/api',
     withCredentials: true
 })
 

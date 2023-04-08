@@ -1,11 +1,11 @@
 <template>
-    <div class="mb-5 flex gap-2 justify-left items-center gap-4">
+    <div class="mb-5 flex flex-col text-center sm:flex-row sm:text-left gap-2 justify-left items-center gap-4">
         <img v-if="currentSystem.avatar" :src="currentSystem.avatar" :alt="currentSystem.username"
              class="flex-shrink-0 w-32 h-32 rounded-full object-cover">
         <Color v-else :color="currentSystem.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25"/>
         <div>
             <p class="text-sm text-gray-700" v-if="isDashboard">SID: {{ currentSystem.id }}</p>
-            <PageTitle class="inline-flex items-center justify-center gap-3">
+            <PageTitle class="inline-flex flex-col sm:flex-row items-center justify-center gap-3">
                 {{ currentSystem.username }}
                 <VisibilityTag v-if="isDashboard" :disabled="toggling" :visible="currentSystem.data.visible" @click.prevent="toggleVisibility"/>
                 <a
