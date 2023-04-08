@@ -24,7 +24,7 @@
         </svg>
 
         <div class="container max-w-7xl mx-auto">
-            <div class="py-32">
+            <div class="py-16 md:py-32 px-4">
                 <div v-if="flashes.length >= 1" class="inline-flex flex-col gap-0.5 w-full">
                     <Flash v-for="flash of flashes" :class="flash.type">
                         {{ flash.message }}

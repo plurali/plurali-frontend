@@ -9,7 +9,7 @@
                 <PageTitle class="text-violet-700 inline-flex items-center justify-center gap-3">
                     {{ data.member.name }}
                     <span class="inline-flex items-center justify-center gap-3">
-                        <VisibilityTag :disabled="toggling" :visible="data.member.data.visible" @click.prevent="toggleVisibility"/>
+                        <VisibilityTag v-if="isAdmin" :disabled="toggling" :visible="data.member.data.visible" @click.prevent="toggleVisibility"/>
                         <a
                             v-if="isAdmin && data.member.data.visible"
                             :href="`/${data.system.data.slug}/${data.member.data.slug}`"

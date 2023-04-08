@@ -7,7 +7,7 @@
             <p class="text-sm text-gray-700" v-if="isAdmin">SID: {{ currentSystem.id }}</p>
             <PageTitle class="inline-flex items-center justify-center gap-3">
                 {{ currentSystem.username }}
-                <VisibilityTag :disabled="toggling" :visible="currentSystem.data.visible" @click.prevent="toggleVisibility"/>
+                <VisibilityTag v-if="isAdmin" :disabled="toggling" :visible="currentSystem.data.visible" @click.prevent="toggleVisibility"/>
                 <a
                         v-if="isAdmin && currentSystem.data.visible"
                         :href="`/${currentSystem.data.slug}`"

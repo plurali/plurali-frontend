@@ -1,7 +1,7 @@
 <template>
     <div class="mb-5">
         <Title>Login</Title>
-        <Subtitle>Login to your PluralInfo account</Subtitle>
+        <Subtitle>Login to your Plurali account</Subtitle>
     </div>
 
     <form class="mb-4 w-full" @submit.prevent="submit">

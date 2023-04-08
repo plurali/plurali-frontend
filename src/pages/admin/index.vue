@@ -1,6 +1,6 @@
 <template>
     <div class="mb-5">
-        <Title>PluralInfo</Title>
+        <Title>Plurali</Title>
         <Subtitle>Informative page about your system and it's members you can share with people!</Subtitle>
     </div>
 

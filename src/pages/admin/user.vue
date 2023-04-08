@@ -1,7 +1,7 @@
 <template>
     <div class="mb-5">
         <Title>Account settings</Title>
-        <Subtitle>Settings of your PluralInfo account</Subtitle>
+        <Subtitle>Settings of your Plurali account</Subtitle>
     </div>
 
     <form class="mb-4 w-full" @submit.prevent="submit">
