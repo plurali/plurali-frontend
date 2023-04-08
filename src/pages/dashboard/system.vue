@@ -18,7 +18,7 @@ import {wrapRequest} from "../../api";
 import {getSystem} from "../../api/system";
 import ColorCircle from "../../components/global/color/ColorCircle.vue";
 import CustomFields from "../../components/global/fields/CustomFields.vue";
-import Members from "../../components/admin/members/Members.vue";
+import Members from "../../components/dashboard/members/Members.vue";
 import Fetchable from "../../components/global/Fetchable.vue";
 import {useGoBack} from "../../composables/goBack";
 import Color from "../../components/global/color/ColorCircle.vue";

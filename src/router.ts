@@ -20,20 +20,20 @@ const routes: RouteRecordRaw[] = [
                 component: () => import("./pages/auth/register.vue")
             },
             {
-                path: "/admin",
-                component: () => import("./pages/admin/index.vue")
+                path: "/dashboard",
+                component: () => import("./pages/dashboard/index.vue")
             },
             {
-                path: "/admin/user",
-                component: () => import("./pages/admin/user.vue")
+                path: "/dashboard/user",
+                component: () => import("./pages/dashboard/user.vue")
             },
             {
-                path: "/admin/system",
-                component: () => import("./pages/admin/system.vue")
+                path: "/dashboard/system",
+                component: () => import("./pages/dashboard/system.vue")
             },
             {
-                path: "/admin/member/:id",
-                component: () => import("./pages/admin/member.vue")
+                path: "/dashboard/member/:id",
+                component: () => import("./pages/dashboard/member.vue")
             },
             {
                 path: "/:systemId",
@@ -65,18 +65,18 @@ router.beforeEach(async (to) => {
     }
 
     if (to.path.startsWith("/auth") && !!user.value) {
-        return router.push("/admin");
+        return router.push("/dashboard");
     }
 
-    if (to.path.startsWith("/admin")) {
+    if (to.path.startsWith("/dashboard")) {
         if (!user.value) {
             return router.push("/auth/login")
         }
 
         if (!user.value.pluralKey) {
             flash("You must setup your Simply Plural API key!", FlashType.Danger)
-            if (to.path !== "/admin/user") {
-                router.push("/admin/user")
+            if (to.path !== "/dashboard/user") {
+                router.push("/dashboard/user")
             }
             return;
         }
