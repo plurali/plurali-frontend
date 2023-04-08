@@ -45,7 +45,6 @@ export const fieldConvertors: Record<MemberFieldType, (val: string, md: boolean)
 }
 
 export const formatField = (field: MemberFieldWithValue): string | null => {
-    console.log(field)
     let str = fieldConvertors[field.type]?.(field.value, true);
 
     // Distinguish empty strings
